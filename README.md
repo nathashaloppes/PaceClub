@@ -6,10 +6,10 @@ Aplicativo mobile-first de corrida e comunidade. Acompanhe seus treinos, dispute
 
 | Tela | Descrição |
 |------|-----------|
-| **Início** | Feed social com stories e posts de corridas |
+| **Início** | Feed social com posts de corridas |
 | **Rankings** | Ranking por percurso (Geral / Feminino / Masculino / Faixa etária) |
 | **Correr** | Timer ao vivo, mapa de rota, BPM, compartilhamento e SOS |
-| **Comunidade** | Amigos, grupos e eventos |
+| **Comunidade** | Amigos, eventos e compromissos |
 | **Perfil** | Conquistas, recordes pessoais e rankings atuais |
 
 ## Pré-requisitos

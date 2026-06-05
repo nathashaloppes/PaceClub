@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #f1f5f9;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+::-webkit-scrollbar { display: none; }
+
+.scrollable {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.map-bg {
+  background-image:
+    linear-gradient(rgba(180,195,170,0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,195,170,0.4) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-color: #dce7d3;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}

@@ -1,0 +1,13 @@
+node_modules
+dist
+.DS_Store
+*.local
+
+# Claude / editor
+CLAUDE.md
+.claude/
+
+# Logs e cache
+*.log
+.vite/
+coverage/

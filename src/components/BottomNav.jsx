@@ -10,8 +10,8 @@ const tabs = [
 
 export default function BottomNav({ active, onChange }) {
   return (
-    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-100 z-50 safe-area-pb">
-      <div className="flex items-end justify-around px-2 pt-2 pb-4">
+    <div className="w-full bg-white border-t border-gray-100 z-50 flex-shrink-0">
+      <div className="flex items-end justify-around px-2 pt-2 pb-4" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
         {tabs.map(({ id, label, Icon }) => {
           const isActive = active === id;
 

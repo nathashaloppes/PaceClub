@@ -66,7 +66,7 @@ function DadosPessoaisView({ profileData, setProfileData, onBack }) {
         <span className="font-bold text-gray-900">Dados pessoais</span>
         <button onClick={handleSave} className="bg-primary text-white text-sm font-bold px-4 py-2 rounded-full">Salvar</button>
       </div>
-      <div className="scrollable flex-1 p-4 space-y-4">
+      <div className="scrollable flex-1 min-h-0 p-4 space-y-4">
         <div className="flex flex-col items-center py-2">
           <Avatar name={form.name} size={64} />
           <button className="text-primary text-sm font-semibold mt-2">Trocar foto</button>
@@ -98,7 +98,7 @@ function SalvosView({ savedPosts = [], toggleSavedPost, onBack }) {
           <p className="text-sm text-gray-400 leading-relaxed">Salve publicações do feed para encontrá-las aqui depois</p>
         </div>
       ) : (
-        <div className="scrollable flex-1 bg-gray-50">
+        <div className="scrollable flex-1 min-h-0 bg-gray-50">
           {savedPosts.map(post => (
             <ProfilePostCard
               key={post.id}
@@ -176,7 +176,7 @@ function SenhaView({ profileData, setProfileData, onBack }) {
           {saved ? 'Salvo ✓' : 'Salvar'}
         </button>
       </div>
-      <div className="scrollable flex-1 p-4 space-y-4">
+      <div className="scrollable flex-1 min-h-0 p-4 space-y-4">
         <div>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">E-mail</p>
           <Field label="E-mail de acesso" icon={Mail} value={email} onChange={setEmail} type="email" placeholder="email@exemplo.com" />
@@ -214,7 +214,7 @@ export default function SettingsScreen({ profileData, setProfileData, isPrivate,
         <h2 className="font-bold text-gray-900 text-lg flex-1">Configurações</h2>
       </div>
 
-      <div className="scrollable flex-1 pb-10">
+      <div className="scrollable flex-1 min-h-0 pb-10">
         <div className="flex items-center gap-4 px-4 py-5 border-b border-gray-100">
           <Avatar name={profileData.name} size={56} />
           <div>

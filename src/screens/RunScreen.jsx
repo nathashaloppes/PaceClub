@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Pause, Play, Flag, Lock, Radio, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Pause, Play, Flag, Lock, Radio, AlertTriangle, Search, X, ChevronRight, MapPin } from 'lucide-react';
 import Avatar from '../components/Avatar';
+import { friends } from '../data/mockData';
 
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60).toString().padStart(2, '0');
@@ -16,6 +17,15 @@ function formatPace(seconds, km) {
   return `${m}:${s}`;
 }
 
+const ALL_ROUTES = [
+  { name: 'Beira Mar 5 km',          record: '25:08', participants: 2347, color: '#7C3AED' },
+  { name: 'Parque do Cocó 10 km',    record: '47:35', participants: 1892, color: '#F97316' },
+  { name: 'Praia do Futuro 7 km',    record: '32:19', participants: 1256, color: '#8B5CF6' },
+  { name: 'Mucuripe 3 km',           record: '14:45', participants: 987,  color: '#10B981' },
+  { name: 'Aldeota Loop 8 km',       record: '39:02', participants: 763,  color: '#EF4444' },
+  { name: 'Cocó – Aguas Park 12 km', record: '58:17', participants: 541,  color: '#3B82F6' },
+];
+
 export default function RunScreen() {
   const [running, setRunning] = useState(false);
   const [started, setStarted] = useState(false);
@@ -23,6 +33,9 @@ export default function RunScreen() {
   const [distance, setDistance] = useState(0);
   const [bpm, setBpm] = useState(0);
   const [showSOS, setShowSOS] = useState(false);
+  const [showMoreRoutes, setShowMoreRoutes] = useState(false);
+  const [friendSearch, setFriendSearch] = useState('');
+  const [sharingWith, setSharingWith] = useState(new Set([friends[0]?.name, friends[1]?.name].filter(Boolean)));
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -52,32 +65,70 @@ export default function RunScreen() {
     setRunning(r => !r);
   }
 
+  function toggleShare(name) {
+    setSharingWith(prev => {
+      const s = new Set(prev);
+      s.has(name) ? s.delete(name) : s.add(name);
+      return s;
+    });
+  }
+
+  const visibleRoutes = showMoreRoutes ? ALL_ROUTES : ALL_ROUTES.slice(0, 3);
+  const filteredFriends = friends.filter(f =>
+    f.name.toLowerCase().includes(friendSearch.toLowerCase()) ||
+    f.assessoria.toLowerCase().includes(friendSearch.toLowerCase())
+  );
+
   const km = distance.toFixed(2);
   const pace = formatPace(elapsed, distance);
 
   if (!started) {
     return (
-      <div className="flex flex-col h-full bg-gray-50">
+      <div className="flex flex-col h-full bg-gray-50 overflow-hidden">
         <div className="pt-12 pb-4 px-4 bg-white border-b border-gray-100">
           <h2 className="text-xl font-bold text-gray-900">Correr</h2>
           <p className="text-sm text-gray-500 mt-1">Pronto para começar seu treino?</p>
         </div>
 
-        <div className="flex-1 scrollable pb-28 p-4 space-y-4">
+        <div className="flex-1 scrollable p-4 space-y-4 pb-4">
+          {/* Mapa */}
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+            <div className="relative h-44 map-bg">
+              <div className="absolute inset-0 bg-black/20" />
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 176" preserveAspectRatio="none">
+                <path d="M 20 140 Q 60 110 100 90 Q 140 70 180 80 Q 220 90 260 65 Q 290 50 310 45" fill="none" stroke="#7C3AED" strokeWidth="3" strokeLinecap="round" />
+                <circle cx="20" cy="140" r="6" fill="#7C3AED" />
+                <circle cx="310" cy="45" r="8" fill="#F97316">
+                  <animate attributeName="r" values="8;12;8" dur="1.5s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
+                </circle>
+                <path d="M 60 100 Q 80 85 100 90" fill="none" stroke="#22c55e" strokeWidth="2" strokeDasharray="6 4" />
+                <path d="M 180 80 Q 200 72 220 78" fill="none" stroke="#F97316" strokeWidth="2" strokeDasharray="6 4" />
+              </svg>
+              <div className="absolute top-3 left-3 bg-white/90 rounded-xl px-3 py-1.5 flex items-center gap-1.5">
+                <div className="w-2 h-2 bg-green-500 rounded-full" />
+                <span className="text-xs font-semibold text-gray-700">GPS ativo</span>
+              </div>
+              <div className="absolute bottom-3 right-3 flex flex-col gap-1">
+                <div className="bg-white/90 rounded-lg p-1.5 flex items-center justify-center">
+                  <span className="text-xs font-bold text-gray-600">+</span>
+                </div>
+                <div className="bg-white/90 rounded-lg p-1.5 flex items-center justify-center">
+                  <span className="text-xs font-bold text-gray-600">−</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Percursos populares */}
           <div className="bg-white rounded-2xl p-5 shadow-sm">
             <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
               <span className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#7C3AED">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
+                <MapPin size={16} className="text-primary" />
               </span>
               Percursos populares
             </h3>
-            {[
-              { name: 'Beira Mar 5 km', record: '25:08', participants: 2347, color: '#7C3AED' },
-              { name: 'Parque do Cocó 10 km', record: '47:35', participants: 1892, color: '#F97316' },
-              { name: 'Praia do Futuro 7 km', record: '32:19', participants: 1256, color: '#8B5CF6' },
-            ].map(route => (
+            {visibleRoutes.map(route => (
               <div key={route.name} className="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0">
                 <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: route.color }} />
                 <div className="flex-1">
@@ -89,8 +140,18 @@ export default function RunScreen() {
                 </button>
               </div>
             ))}
+            {!showMoreRoutes && (
+              <button
+                onClick={() => setShowMoreRoutes(true)}
+                className="w-full flex items-center justify-center gap-1 pt-3 text-primary text-sm font-semibold"
+              >
+                Ver mais percursos
+                <ChevronRight size={16} />
+              </button>
+            )}
           </div>
 
+          {/* Compartilhar localização */}
           <div className="bg-white rounded-2xl p-5 shadow-sm">
             <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
               <span className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
@@ -98,21 +159,49 @@ export default function RunScreen() {
               </span>
               Compartilhar localização
             </h3>
-            <div className="space-y-3">
-              {['Amanda Silva', 'Lucas Ferreira'].map(name => (
-                <div key={name} className="flex items-center gap-3">
-                  <Avatar name={name} size={36} />
-                  <span className="flex-1 text-sm font-medium text-gray-700">{name}</span>
-                  <div className="w-11 h-6 bg-primary rounded-full relative">
-                    <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5 shadow" />
+
+            <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2.5 mb-3">
+              <Search size={15} className="text-gray-400 flex-shrink-0" />
+              <input
+                className="bg-transparent flex-1 text-sm outline-none text-gray-700 placeholder-gray-400"
+                placeholder="Buscar amigo para acompanhar"
+                value={friendSearch}
+                onChange={e => setFriendSearch(e.target.value)}
+              />
+              {friendSearch && (
+                <button onClick={() => setFriendSearch('')}>
+                  <X size={14} className="text-gray-400" />
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-3 max-h-52 overflow-y-auto">
+              {filteredFriends.map(f => {
+                const isSharing = sharingWith.has(f.name);
+                return (
+                  <div key={f.id} className="flex items-center gap-3">
+                    <Avatar name={f.name} size={36} />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-medium text-gray-700 truncate block">{f.name}</span>
+                      <span className="text-xs text-gray-400 truncate block">{f.assessoria}</span>
+                    </div>
+                    <button
+                      onClick={() => toggleShare(f.name)}
+                      className={`w-11 h-6 rounded-full relative transition-colors ${isSharing ? 'bg-primary' : 'bg-gray-200'}`}
+                    >
+                      <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform shadow ${isSharing ? 'right-0.5' : 'left-0.5'}`} />
+                    </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
+              {filteredFriends.length === 0 && (
+                <p className="text-sm text-gray-400 text-center py-2">Nenhum amigo encontrado</p>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-4 pb-2">
+        <div className="px-4 py-3 bg-white border-t border-gray-100">
           <button
             onClick={handleStart}
             className="w-full bg-accent text-white font-black text-lg py-5 rounded-2xl shadow-lg shadow-orange-200 active:scale-95 transition-transform"
@@ -204,9 +293,9 @@ export default function RunScreen() {
         <div className="bg-gray-800 rounded-2xl p-3 mb-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-400 mb-2">Compartilhando com 2 pessoas</p>
+              <p className="text-xs text-gray-400 mb-2">Compartilhando com {sharingWith.size} {sharingWith.size === 1 ? 'pessoa' : 'pessoas'}</p>
               <div className="flex gap-2">
-                {['Amanda Silva', 'Lucas Ferreira'].map(name => (
+                {Array.from(sharingWith).slice(0, 3).map(name => (
                   <div key={name} className="flex items-center gap-1.5">
                     <Avatar name={name} size={28} />
                     <span className="text-xs text-gray-300">{name.split(' ')[0]}</span>

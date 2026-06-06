@@ -285,61 +285,62 @@ export default function ProfileScreen({ navigate, profileData }) {
 
   return (
     <div className="flex flex-col h-full relative">
-      <div className="bg-primary pb-6">
-        <div className="flex items-center justify-between px-4 pt-12 pb-4">
-          <button><Share2 size={22} color="white" /></button>
-          <button onClick={() => navigate('settings')}>
-            <MoreHorizontal size={22} color="white" />
-          </button>
+      <div className="scrollable flex-1 min-h-0">
+        <div className="bg-primary pb-6">
+          <div className="flex items-center justify-between px-4 pt-12 pb-4">
+            <button><Share2 size={22} color="white" /></button>
+            <button onClick={() => navigate('settings')}>
+              <MoreHorizontal size={22} color="white" />
+            </button>
+          </div>
+
+          <div className="flex flex-col items-center px-4">
+            <div className="relative mb-3">
+              <Avatar name={name} size={88} ring />
+              <button className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow">
+                <Edit3 size={14} className="text-primary" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-black text-white">{name}</h2>
+              <VerifiedBadge size={20} onClick={() => setShowVerified(true)} />
+            </div>
+
+            <p className="text-purple-200 text-sm mt-0.5">{username}</p>
+            <RatingStars rating={currentUser.rating} />
+
+            <div className="flex flex-col items-center gap-1 mt-3">
+              <div className="flex items-center gap-1.5">
+                <MapPin size={14} color="white" opacity={0.8} />
+                <span className="text-purple-200 text-sm">{city}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Users size={14} color="white" opacity={0.8} />
+                <span className="text-purple-200 text-sm">Assessoria: {assessoria}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-10 mt-6">
+              <button onClick={() => setShowFollowers(true)} className="flex flex-col items-center">
+                <span className="text-2xl font-black text-white">{currentUser.followers.toLocaleString('pt-BR')}</span>
+                <span className="text-xs text-purple-200 mt-0.5 underline underline-offset-2">Seguidores</span>
+              </button>
+              <div className="w-px h-8 bg-white/20" />
+              <button onClick={() => setShowFollowing(true)} className="flex flex-col items-center">
+                <span className="text-2xl font-black text-white">{currentUser.following.toLocaleString('pt-BR')}</span>
+                <span className="text-xs text-purple-200 mt-0.5 underline underline-offset-2">Seguindo</span>
+              </button>
+              <div className="w-px h-8 bg-white/20" />
+              <div className="flex flex-col items-center">
+                <span className="text-2xl font-black text-white">{currentUser.runs.toLocaleString('pt-BR')}</span>
+                <span className="text-xs text-purple-200 mt-0.5">Corridas</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col items-center px-4">
-          <div className="relative mb-3">
-            <Avatar name={name} size={88} ring />
-            <button className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow">
-              <Edit3 size={14} className="text-primary" />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <h2 className="text-2xl font-black text-white">{name}</h2>
-            <VerifiedBadge size={20} onClick={() => setShowVerified(true)} />
-          </div>
-
-          <p className="text-blue-200 text-sm mt-0.5">{username}</p>
-          <RatingStars rating={currentUser.rating} />
-
-          <div className="flex flex-col items-center gap-1 mt-3">
-            <div className="flex items-center gap-1.5">
-              <MapPin size={14} color="white" opacity={0.8} />
-              <span className="text-blue-200 text-sm">{city}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Users size={14} color="white" opacity={0.8} />
-              <span className="text-blue-200 text-sm">Assessoria: {assessoria}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-10 mt-6">
-            <button onClick={() => setShowFollowers(true)} className="flex flex-col items-center">
-              <span className="text-2xl font-black text-white">{currentUser.followers.toLocaleString('pt-BR')}</span>
-              <span className="text-xs text-blue-200 mt-0.5 underline underline-offset-2">Seguidores</span>
-            </button>
-            <div className="w-px h-8 bg-white/20" />
-            <button onClick={() => setShowFollowing(true)} className="flex flex-col items-center">
-              <span className="text-2xl font-black text-white">{currentUser.following.toLocaleString('pt-BR')}</span>
-              <span className="text-xs text-blue-200 mt-0.5 underline underline-offset-2">Seguindo</span>
-            </button>
-            <div className="w-px h-8 bg-white/20" />
-            <div className="flex flex-col items-center">
-              <span className="text-2xl font-black text-white">{currentUser.runs.toLocaleString('pt-BR')}</span>
-              <span className="text-xs text-blue-200 mt-0.5">Corridas</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="scrollable flex-1 bg-gray-50 pb-24">
+        <div className="bg-gray-50 pb-6">
         <div className="bg-white px-4 pt-4 pb-5 mb-3">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-900">Conquistas</h3>
@@ -408,6 +409,7 @@ export default function ProfileScreen({ navigate, profileData }) {
             onAddParticipants={p => setAddParticipantsPost(p)}
           />
         ))}
+        </div>
       </div>
 
       {showVerified && <VerifiedModal onClose={() => setShowVerified(false)} />}

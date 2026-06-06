@@ -49,7 +49,7 @@ function MapView() {
         </div>
       </div>
 
-      <div className="mt-4 space-y-3 pb-24">
+      <div className="mt-4 space-y-3 pb-6">
         {routes.map(route => (
           <RouteCard key={route.id} route={route} />
         ))}
@@ -123,11 +123,11 @@ export default function RoutesScreen() {
         </button>
       </div>
 
-      <div className="scrollable flex-1 bg-gray-50">
+      <div className="scrollable flex-1 min-h-0 bg-gray-50">
         {view === 'map' ? (
           <MapView />
         ) : (
-          <div className="px-4 pt-3 pb-24 space-y-3">
+          <div className="px-4 pt-3 pb-6 space-y-3">
             {routes.map(route => (
               <RouteCard key={route.id} route={route} />
             ))}

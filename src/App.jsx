@@ -82,7 +82,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-1 overflow-hidden relative">
         <Screen {...sharedProps} />
 
@@ -92,6 +92,8 @@ export default function App() {
               notifications={notifications}
               setNotifications={setNotifications}
               addCommitment={addCommitment}
+              commitments={commitments}
+              setCommitments={setCommitments}
               navigate={navigate}
               onBack={goBack}
             />

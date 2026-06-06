@@ -43,7 +43,7 @@ function MutualFriendsModal({ list, navigate, onClose }) {
         <h2 className="font-bold text-gray-900 text-lg flex-1">Amigos em comum</h2>
         <span className="text-sm text-gray-400">{list.length}</span>
       </div>
-      <div className="scrollable flex-1">
+      <div className="scrollable flex-1 min-h-0">
         {list.map((f, i) => (
           <button
             key={i}
@@ -181,84 +181,69 @@ export default function ThirdPartyProfileScreen({ user, addNotification, addComm
 
   return (
     <div className="flex flex-col h-full relative">
-      {showInvite && (
-        <InviteRunModal
-          user={user}
-          onClose={() => setShowInvite(false)}
-          onSend={handleSendInvite}
-        />
-      )}
-
-      {showMutualFriends && (
-        <MutualFriendsModal
-          list={mutualList}
-          navigate={navigate}
-          onClose={() => setShowMutualFriends(false)}
-        />
-      )}
-
-      <div className="bg-primary pb-6">
-        <div className="flex items-center px-4 pt-12 pb-4">
-          <button onClick={onBack}>
-            <ArrowLeft size={22} color="white" />
-          </button>
-        </div>
-
-        <div className="flex flex-col items-center px-4">
-          <div className="mb-3">
-            <Avatar name={user.name} size={88} ring />
+      <div className="scrollable flex-1 min-h-0 min-h-0">
+        <div className="bg-primary pb-6">
+          <div className="flex items-center px-4 pt-12 pb-4">
+            <button onClick={onBack}>
+              <ArrowLeft size={22} color="white" />
+            </button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <h2 className="text-2xl font-black text-white">{user.name}</h2>
-            <VerifiedBadge size={20} />
-          </div>
-
-          <p className="text-blue-200 text-sm mt-0.5">@{user.name.toLowerCase().replace(/\s+/g, '')}</p>
-          <RatingStars rating={rating} />
-
-          <div className="flex items-center gap-1.5 mt-2">
-            <MapPin size={13} color="white" opacity={0.8} />
-            <span className="text-blue-200 text-sm">{user.city || 'Fortaleza, CE'}</span>
-          </div>
-
-          {canSeeProfile && (
-            <div className="flex items-center gap-10 mt-4">
-              <div className="flex flex-col items-center">
-                <span className="text-2xl font-black text-white">124</span>
-                <span className="text-xs text-blue-200 mt-0.5">Seguidores</span>
-              </div>
-              <div className="w-px h-8 bg-white/20" />
-              <div className="flex flex-col items-center">
-                <span className="text-2xl font-black text-white">98</span>
-                <span className="text-xs text-blue-200 mt-0.5">Seguindo</span>
-              </div>
-              <div className="w-px h-8 bg-white/20" />
-              <div className="flex flex-col items-center">
-                <span className="text-2xl font-black text-white">213</span>
-                <span className="text-xs text-blue-200 mt-0.5">Corridas</span>
-              </div>
+          <div className="flex flex-col items-center px-4">
+            <div className="mb-3">
+              <Avatar name={user.name} size={88} ring />
             </div>
-          )}
 
-          <div className="flex gap-3 mt-4 w-full">
-            <button
-              onClick={() => setFollowing(f => !f)}
-              className={`flex-1 py-2.5 rounded-2xl font-bold text-sm transition-colors ${following ? 'bg-white/20 text-white border border-white/30' : 'bg-white text-primary'}`}
-            >
-              {following ? 'Seguindo' : 'Seguir'}
-            </button>
-            <button
-              onClick={() => setShowInvite(true)}
-              className="flex-1 bg-accent text-white py-2.5 rounded-2xl font-bold text-sm"
-            >
-              Convidar para correr
-            </button>
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-black text-white">{user.name}</h2>
+              <VerifiedBadge size={20} />
+            </div>
+
+            <p className="text-purple-200 text-sm mt-0.5">@{user.name.toLowerCase().replace(/\s+/g, '')}</p>
+            <RatingStars rating={rating} />
+
+            <div className="flex items-center gap-1.5 mt-2">
+              <MapPin size={13} color="white" opacity={0.8} />
+              <span className="text-purple-200 text-sm">{user.city || 'Fortaleza, CE'}</span>
+            </div>
+
+            {canSeeProfile && (
+              <div className="flex items-center gap-10 mt-4">
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl font-black text-white">124</span>
+                  <span className="text-xs text-purple-200 mt-0.5">Seguidores</span>
+                </div>
+                <div className="w-px h-8 bg-white/20" />
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl font-black text-white">98</span>
+                  <span className="text-xs text-purple-200 mt-0.5">Seguindo</span>
+                </div>
+                <div className="w-px h-8 bg-white/20" />
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl font-black text-white">213</span>
+                  <span className="text-xs text-purple-200 mt-0.5">Corridas</span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 mt-4 w-full">
+              <button
+                onClick={() => setFollowing(f => !f)}
+                className={`flex-1 py-2.5 rounded-2xl font-bold text-sm transition-colors ${following ? 'bg-white/20 text-white border border-white/30' : 'bg-white text-primary'}`}
+              >
+                {following ? 'Seguindo' : 'Seguir'}
+              </button>
+              <button
+                onClick={() => setShowInvite(true)}
+                className="flex-1 bg-accent text-white py-2.5 rounded-2xl font-bold text-sm"
+              >
+                Convidar para correr
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="scrollable flex-1 bg-gray-50 pb-24">
+      <div className="bg-gray-50 pb-6">
         {canSeeProfile ? (
           <>
             {/* Amigos em comum — clicável */}
@@ -371,6 +356,23 @@ export default function ThirdPartyProfileScreen({ user, addNotification, addComm
           </>
         )}
       </div>
+      </div>
+
+      {showInvite && (
+        <InviteRunModal
+          user={user}
+          onClose={() => setShowInvite(false)}
+          onSend={handleSendInvite}
+        />
+      )}
+
+      {showMutualFriends && (
+        <MutualFriendsModal
+          list={mutualList}
+          navigate={navigate}
+          onClose={() => setShowMutualFriends(false)}
+        />
+      )}
     </div>
   );
 }

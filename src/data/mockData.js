@@ -208,7 +208,6 @@ export const initialNotifications = [
   { id: 1, type: 'like', user: 'Amanda Silva', text: 'curtiu sua publicação', time: '2 min', preview: '5,02 km · 28:10', read: false },
   { id: 2, type: 'comment', user: 'Lucas Ferreira', text: 'comentou: "Muito bom! 🔥"', time: '15 min', preview: '5,02 km · 28:10', read: false },
   { id: 3, type: 'follow_request', user: 'Rafael Melo', text: 'quer te seguir', time: '1h', read: false },
-  { id: 4, type: 'participate', user: 'Íkaro Sousa', text: 'quer participar do seu treino em Beira Mar', time: '2h', read: false },
   { id: 5, type: 'training_invite', user: 'Amanda Silva', text: 'te convidou para correr', time: '3h', location: 'Parque do Cocó', date: '15/06', runTime: '07:00', distance: '10 km', read: true },
   { id: 6, type: 'like', user: 'Carla Mendes', text: 'curtiu sua publicação', time: '5h', read: true },
   { id: 7, type: 'follow_request', user: 'Beatriz Lima', text: 'quer te seguir', time: '1d', read: true },

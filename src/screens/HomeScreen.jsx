@@ -453,32 +453,56 @@ const POST_TYPES = [
   { id: 'workout', icon: Watch,          label: 'Treino concluído',     description: 'Sincronize do seu relógio',             color: '#16A34A', bg: '#F0FDF4' },
 ];
 
-function PostTypeMenu({ onSelect, onClose }) {
+function NewPostDropdown({ onSelect, onClose }) {
   return (
-    <div className="absolute inset-0 z-40 flex flex-col justify-end">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl z-50 max-h-[85vh] flex flex-col">
-        <div className="px-4 pt-5 pb-3 flex-shrink-0 flex items-center justify-between">
-          <h3 className="text-lg font-black text-gray-900">Nova publicação</h3>
-          <button onClick={onClose} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-            <X size={16} className="text-gray-500" />
+    <>
+      <div className="fixed inset-0 z-30" onClick={onClose} />
+      <div className="absolute right-0 top-11 z-40 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden min-w-[210px]">
+        {POST_TYPES.map(({ id, icon: Icon, label, color }, idx) => (
+          <button
+            key={id}
+            onClick={() => { onSelect(id); onClose(); }}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-left active:bg-gray-50 ${idx < POST_TYPES.length - 1 ? 'border-b border-gray-50' : ''}`}
+          >
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: color + '22' }}>
+              <Icon size={16} style={{ color }} />
+            </div>
+            <span className="text-sm font-medium text-gray-700">{label}</span>
           </button>
-        </div>
-        <div className="overflow-y-auto px-4 pb-10 space-y-2">
-          {POST_TYPES.map(({ id, icon: Icon, label, description, color, bg }) => (
-            <button key={id} onClick={() => onSelect(id)} className="w-full flex items-center gap-4 p-4 rounded-2xl active:scale-98 transition-transform text-left" style={{ background: bg }}>
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: color + '22' }}>
-                <Icon size={22} style={{ color }} />
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold text-sm text-gray-900">{label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{description}</p>
-              </div>
-              <ChevronRight size={16} className="text-gray-300 flex-shrink-0" />
-            </button>
-          ))}
-        </div>
+        ))}
       </div>
+    </>
+  );
+}
+
+function FriendTagPicker({ tagged, onChange }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <button onClick={() => setOpen(o => !o)} className="flex items-center gap-2 text-primary text-sm font-semibold">
+        <UserPlus size={16} />
+        {tagged.length > 0 ? `${tagged.length} amigo${tagged.length > 1 ? 's' : ''} marcado${tagged.length > 1 ? 's' : ''}` : 'Marcar amigo'}
+      </button>
+      {open && (
+        <div className="mt-2 space-y-1">
+          {friends.map(f => {
+            const isTagged = tagged.includes(f.name);
+            return (
+              <button
+                key={f.id}
+                onClick={() => onChange(isTagged ? tagged.filter(n => n !== f.name) : [...tagged, f.name])}
+                className="w-full flex items-center gap-3 py-2 px-3 rounded-xl bg-gray-50 text-left"
+              >
+                <Avatar name={f.name} size={30} />
+                <span className="flex-1 text-sm font-medium text-gray-700">{f.name}</span>
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isTagged ? 'bg-primary border-primary' : 'border-gray-200'}`}>
+                  {isTagged && <Check size={11} color="white" strokeWidth={3} />}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -487,6 +511,7 @@ function PhotoModal({ onPublish, onClose }) {
   const [text, setText] = useState('');
   const [location, setLocation] = useState('');
   const [showLoc, setShowLoc] = useState(false);
+  const [tagged, setTagged] = useState([]);
 
   return (
     <div className="absolute inset-0 z-50 bg-white flex flex-col">
@@ -494,7 +519,7 @@ function PhotoModal({ onPublish, onClose }) {
         <button onClick={onClose}><X size={22} className="text-gray-500" /></button>
         <span className="font-bold text-gray-900">Postar foto</span>
         <button
-          onClick={() => { onPublish({ type: 'photo', description: text, location }); onClose(); }}
+          onClick={() => { onPublish({ type: 'photo', description: text, location, participants: tagged }); onClose(); }}
           className={`text-sm font-bold px-4 py-2 rounded-full ${text.trim() ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}
         >
           Publicar
@@ -517,6 +542,7 @@ function PhotoModal({ onPublish, onClose }) {
           {location || 'Adicionar localização'}
         </button>
         {showLoc && <LocationPicker location={location} onChange={setLocation} />}
+        <FriendTagPicker tagged={tagged} onChange={setTagged} />
       </div>
     </div>
   );
@@ -619,6 +645,7 @@ function ThoughtModal({ onPublish, onClose }) {
   const [text, setText] = useState('');
   const [location, setLocation] = useState('');
   const [showLoc, setShowLoc] = useState(false);
+  const [tagged, setTagged] = useState([]);
   const SUGGESTIONS = ['Bora correr! 🔥', 'Sem desculpas hoje 💪', 'Cada km conta ⚡', 'Mente forte, pernas mais 🏃'];
 
   return (
@@ -627,7 +654,7 @@ function ThoughtModal({ onPublish, onClose }) {
         <button onClick={onClose}><X size={22} className="text-gray-500" /></button>
         <span className="font-bold text-gray-900">Pensamentos</span>
         <button
-          onClick={() => { if (text.trim()) { onPublish({ type: 'thought', text, location }); onClose(); } }}
+          onClick={() => { if (text.trim()) { onPublish({ type: 'thought', text, location, participants: tagged }); onClose(); } }}
           className={`text-sm font-bold px-4 py-2 rounded-full ${text.trim() ? 'bg-accent text-white' : 'bg-gray-100 text-gray-400'}`}
         >
           Publicar
@@ -656,6 +683,7 @@ function ThoughtModal({ onPublish, onClose }) {
           {location || 'Adicionar localização'}
         </button>
         {showLoc && <LocationPicker location={location} onChange={setLocation} />}
+        <FriendTagPicker tagged={tagged} onChange={setTagged} />
       </div>
     </div>
   );
@@ -750,19 +778,11 @@ function WorkoutModal({ onPublish, onClose }) {
   );
 }
 
-function NewPostFlow({ onPublish, onClose }) {
-  const [selected, setSelected] = useState(null);
-  if (selected === 'photo')   return <PhotoModal onPublish={onPublish} onClose={onClose} />;
-  if (selected === 'invite')  return <InviteModal onPublish={onPublish} onClose={onClose} />;
-  if (selected === 'thought') return <ThoughtModal onPublish={onPublish} onClose={onClose} />;
-  if (selected === 'workout') return <WorkoutModal onPublish={onPublish} onClose={onClose} />;
-  return <PostTypeMenu onSelect={setSelected} onClose={onClose} />;
-}
-
 // ─── Home Screen ───────────────────────────────────────────────────
 export default function HomeScreen({ navigate, unreadCount, savedPosts, toggleSavedPost }) {
   const [posts, setPosts] = useState(initialFeedPosts);
-  const [newPostOpen, setNewPostOpen] = useState(false);
+  const [showPostMenu, setShowPostMenu] = useState(false);
+  const [postType, setPostType] = useState(null);
   const [editPost, setEditPost] = useState(null);
   const [editInvitePost, setEditInvitePost] = useState(null);
   const [participantsPost, setParticipantsPost] = useState(null);
@@ -798,12 +818,17 @@ export default function HomeScreen({ navigate, unreadCount, savedPosts, toggleSa
           <span className="text-2xl font-black text-gray-800">club</span>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setNewPostOpen(true)}
-            className="w-9 h-9 bg-primary rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-transform"
-          >
-            <Plus size={20} color="white" strokeWidth={2.5} />
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowPostMenu(p => !p)}
+              className="w-9 h-9 bg-primary rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-transform"
+            >
+              <Plus size={20} color="white" strokeWidth={2.5} />
+            </button>
+            {showPostMenu && (
+              <NewPostDropdown onSelect={t => setPostType(t)} onClose={() => setShowPostMenu(false)} />
+            )}
+          </div>
           <button className="relative p-1" onClick={() => navigate('notifications')}>
             <Bell size={24} className="text-gray-700" />
             {unreadCount > 0 && (
@@ -813,7 +838,8 @@ export default function HomeScreen({ navigate, unreadCount, savedPosts, toggleSa
         </div>
       </div>
 
-      <div className="scrollable flex-1 pb-24">
+
+      <div className="scrollable flex-1 min-h-0 pb-6">
         <div className="py-3 border-b border-gray-100">
           <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Sugestões para você</p>
           <div className="flex gap-3 px-4 overflow-x-auto">
@@ -836,7 +862,10 @@ export default function HomeScreen({ navigate, unreadCount, savedPosts, toggleSa
         </div>
       </div>
 
-      {newPostOpen && <NewPostFlow onPublish={handlePublish} onClose={() => setNewPostOpen(false)} />}
+      {postType === 'photo'   && <PhotoModal   onPublish={handlePublish} onClose={() => setPostType(null)} />}
+      {postType === 'invite'  && <InviteModal  onPublish={handlePublish} onClose={() => setPostType(null)} />}
+      {postType === 'thought' && <ThoughtModal onPublish={handlePublish} onClose={() => setPostType(null)} />}
+      {postType === 'workout' && <WorkoutModal onPublish={handlePublish} onClose={() => setPostType(null)} />}
 
       {editPost && (
         <EditPostModal

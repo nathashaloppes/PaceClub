@@ -412,7 +412,7 @@ function CommitmentsPage({ commitments, setCommitments, onBack }) {
         <h2 className="font-bold text-gray-900 text-lg">Compromissos</h2>
       </div>
 
-      <div className="scrollable flex-1 bg-gray-50 pb-24">
+      <div className="scrollable flex-1 min-h-0 bg-gray-50 pb-6">
         {commitments.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-52 text-center px-8">
             <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm border border-gray-100">
@@ -513,24 +513,13 @@ function CommitmentsPage({ commitments, setCommitments, onBack }) {
 }
 
 // ─── Community Screen ──────────────────────────────────────────────
-export default function CommunityScreen({ commitments, setCommitments, navigate }) {
+export default function CommunityScreen({ navigate }) {
   const [tab, setTab] = useState('Amigos');
-  const [showCompromissos, setShowCompromissos] = useState(false);
   const [myEvents, setMyEvents] = useState([]);
   const [showAddEvent, setShowAddEvent] = useState(false);
 
   function addEvent(event) {
     setMyEvents(prev => [{ id: Date.now(), ...event }, ...prev]);
-  }
-
-  if (showCompromissos) {
-    return (
-      <CommitmentsPage
-        commitments={commitments}
-        setCommitments={setCommitments}
-        onBack={() => setShowCompromissos(false)}
-      />
-    );
   }
 
   return (
@@ -551,15 +540,9 @@ export default function CommunityScreen({ commitments, setCommitments, navigate 
             {t}
           </button>
         ))}
-        <button
-          onClick={() => setShowCompromissos(true)}
-          className="px-5 py-2.5 rounded-full text-sm font-semibold flex-shrink-0 bg-gray-100 text-gray-600"
-        >
-          Compromissos
-        </button>
       </div>
 
-      <div className="scrollable flex-1 bg-white pb-24">
+      <div className="scrollable flex-1 min-h-0 bg-white pb-6">
         {tab === 'Amigos'  && <FriendsTab navigate={navigate} />}
         {tab === 'Eventos' && <EventsTab myEvents={myEvents} setMyEvents={setMyEvents} onAddClick={() => setShowAddEvent(true)} />}
       </div>

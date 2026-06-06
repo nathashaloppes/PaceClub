@@ -40,7 +40,7 @@ function RouteList({ onSelect }) {
         </div>
       </div>
 
-      <div className="scrollable flex-1 pb-24 bg-gray-50 pt-3 px-4 space-y-3">
+      <div className="scrollable flex-1 min-h-0 pb-6 bg-gray-50 pt-3 px-4 space-y-3">
         {filtered.length === 0 ? (
           <div className="text-center py-16">
             <Search size={36} className="text-gray-200 mx-auto mb-3" />
@@ -137,7 +137,7 @@ function RouteDetail({ route, onBack }) {
         ))}
       </div>
 
-      <div className="scrollable flex-1 bg-white pb-36 pt-2">
+      <div className="scrollable flex-1 min-h-0 bg-white pb-36 pt-2">
         {list.map(runner => (
           <div
             key={runner.pos}
